@@ -1,5 +1,7 @@
 [user]
 	name = angryz
 	email = angryzorro@gmail.com
+[core]
+  ignorecase = false
 [alias]
 	lol = log --pretty=oneline --abbrev-commit --graph --decorate
