@@ -3,7 +3,7 @@
 "       Zhipeng Zheng
 "
 " Version: 
-"       0.1 - Jul 2, 2015
+"       0.2 - Feb 7, 2017
 "
 " Sections:
 "    -> General
@@ -16,6 +16,7 @@
 "    -> Status line
 "    -> Editing mappings
 "    -> Helper functions
+"    -> Bundles (Manage with Vundle)
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -40,6 +41,9 @@ let mapleader = ","
 " Fast saving
 nmap <leader>w :w!<cr>
 
+" Fast quiting
+nmap <leader>q :wq<cr>
+
 " :W sudo saves the file 
 " (useful for handling the permission-denied error)
 command W w !sudo tee % > /dev/null
@@ -53,6 +57,9 @@ set so=7
 
 "Always show current position
 set ruler
+
+" Dispaly incomplete commands
+set showcmd
 
 " Height of the command bar
 set cmdheight=2
@@ -89,6 +96,14 @@ set mat=2
 
 " Add a bit extra margin to the left
 set foldcolumn=1
+
+" Make it obvious where 80 characters is
+set textwidth=80
+set colorcolumn=+1
+
+" Numbers
+set number
+set numberwidth=5
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -132,6 +147,9 @@ set smarttab
 " 1 tab == 2 spaces
 set shiftwidth=2
 set tabstop=2
+
+" Display extra whitespace
+set list listchars=tab:»·,trail:·
 
 " Linebreak on 500 characters
 set lbr
@@ -210,7 +228,8 @@ set viminfo^=%
 set laststatus=2
 
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
+"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
+set statusline+=%{fugitive#statusline()} "  Git Hotness
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -247,3 +266,53 @@ hi DiffAdd ctermbg=blue ctermfg=white
 hi DiffDelete ctermbg=green ctermfg=none
 hi DiffChange ctermbg=red ctermfg=White
 hi DiffText ctermbg=yellow ctermfg=black
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Bundles
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set nocompatible
+filetype off
+
+" Vundle
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" 使用Vundle管理插件
+Plugin 'gmarik/Vundle.vim'
+
+" Define bundles via Github repos
+Bundle 'christoomey/vim-run-interactive'
+Bundle 'croaky/vim-colors-github'
+Bundle "scrooloose/nerdtree"
+Bundle 'Xuyuanp/nerdtree-git-plugin'
+Bundle "Lokaltog/vim-powerline"
+Bundle 'tpope/vim-fugitive'
+Bundle 'scrooloose/syntastic'
+
+call vundle#end()
+filetype plugin indent on
+
+" Nerd Tree
+let NERDChristmasTree=0
+let NERDTreeWinSize=40
+let NERDTreeChDirMode=2
+let NERDTreeIgnore=['\~$', '\.pyc$', '\.swp$']
+let NERDTreeShowBookmarks=1
+let NERDTreeWinPos="right"
+autocmd vimenter * if !argc() | NERDTree | endif " Automatically open a NERDTree if no files where specified
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif " Close vim if the only window left open is a NERDTree
+nmap <F5> :NERDTreeToggle<cr>
+
+" Run commands that require an interactive shell
+nnoremap <Leader>r :RunInInteractiveShell<space>
+
+" configure syntastic syntax checking to check on open as well as save
+let g:syntastic_check_on_open=1
+let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_wq = 0
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*

@@ -1,7 +1,13 @@
 [user]
 	name = angryz
 	email = angryzorro@gmail.com
+[push]
+  default = current
+[color]
+  ui = auto
 [core]
-  ignorecase = false
-[alias]
-	lol = log --pretty=oneline --abbrev-commit --graph --decorate
+	ignorecase = false
+	excludesfile = /Users/zzp/.gitignore_global
+	pager = diff-so-fancy | less --tabs=4 -RFX
+[credential]
+  helper = osxkeychain
